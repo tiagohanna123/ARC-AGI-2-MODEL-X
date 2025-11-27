@@ -1,0 +1,9 @@
+# ARC-AGI-2 Model X Requirements
+# Python 3.8+ is required
+
+# No external dependencies needed for the core solver
+# The solver uses only Python standard library
+
+# Optional dependencies for extended functionality:
+# numpy>=1.21.0  # For advanced matrix operations
+# tqdm>=4.65.0   # For progress bars
