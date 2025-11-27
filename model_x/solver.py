@@ -11,6 +11,10 @@ from typing import Dict, List, Tuple, Optional, Any
 from copy import deepcopy
 import math
 
+# Common marker color used in ARC-AGI tasks to indicate regions of interest
+# Color 8 (azure/light blue) is frequently used as a marker in ARC tasks
+MARKER_COLOR = 8
+
 
 class Grid:
     """Represents an ARC-AGI grid with utility methods."""
@@ -282,8 +286,8 @@ class ARCSolver:
     def _extract_pattern(self, input_grid: Grid, 
                          train_pairs: List[Dict]) -> Grid:
         """Extract a pattern or region from the input."""
-        # Try to find objects marked with specific colors (often 8)
-        marker_colors = {8}  # Common marker color in ARC tasks
+        # Try to find objects marked with the marker color
+        marker_colors = {MARKER_COLOR}
         
         for row_idx, row in enumerate(input_grid.data):
             for col_idx, cell in enumerate(row):
@@ -313,15 +317,15 @@ class ARCSolver:
             expected_h = len(train_pairs[0]['output'])
             expected_w = len(train_pairs[0]['output'][0])
             
-            # Find region with marker color 8 and extract adjacent region
+            # Find region with marker color and extract adjacent region
             marker_positions = []
             for r, row in enumerate(input_grid.data):
                 for c, cell in enumerate(row):
-                    if cell == 8:
+                    if cell == MARKER_COLOR:
                         marker_positions.append((r, c))
             
             if marker_positions:
-                # Find bounding box of non-8 region adjacent to markers
+                # Find bounding box of non-marker region adjacent to markers
                 min_r = min(p[0] for p in marker_positions)
                 max_r = max(p[0] for p in marker_positions)
                 
@@ -337,7 +341,7 @@ class ARCSolver:
                         in_c = marker_col - expected_w + c
                         if 0 <= in_r < input_grid.height and 0 <= in_c < input_grid.width:
                             val = input_grid.data[in_r][in_c]
-                            if val != 8:
+                            if val != MARKER_COLOR:
                                 row_data.append(val)
                             else:
                                 row_data.append(0)
